@@ -38,6 +38,19 @@ class Camera:
         y_final = curr_tuple[1] + direction * (int)(self.speed * (math.cos(math.pi * self.angle / 180)));
         new_tuple = (x_final, y_final);
         self.rect.center = new_tuple;
-    def Cast_Rays(self):
-        # Cast the center Rays;
-        pass;
+    def Cast_Rays(self, ray_count = 16):
+        for i in range(-ray_count // 2, (ray_count // 2) + 1, 1):
+            self.Cast_Ray(self.angle + 4 * i);
+    def Cast_Ray(self, angle):
+        x, y = self.rect.center[0], self.rect.center[1];
+        while True:
+            i = (x - Assets.off_x) // Assets.tile_width;
+            j = (y - Assets.off_y) // Assets.tile_width;
+            if( x < 0 or y < 0 or x >= Assets.width or y >= Assets.height):
+                break;
+            elif( i > -1 and j > -1 and i < len(Assets.grid[0]) and j < len(Assets.grid) and Assets.grid[j][i]):
+                py.draw.line(Assets.screen, (255,0,0), (self.rect.center[0], self.rect.center[1]), (x,y));
+                break;
+            else: 
+                y -= (int)(math.cos(angle * math.pi / 180) * Assets.tile_magnitude);
+                x -= (int)(math.sin(angle * math.pi / 180) * Assets.tile_magnitude);

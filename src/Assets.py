@@ -1,8 +1,11 @@
 import pygame as py;
 #Assets used by other files;
 tile_width = 25;
+tile_magnitude = 10;
 width = 800;
 height = 600;
+off_x = off_y = 0;
+grid = [];
 #Parameters;
 clock = py.time.Clock();
 screen = py.display.set_mode((width, height));
