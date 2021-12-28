@@ -1,0 +1,27 @@
+# Importing Modules #
+import pygame as py;
+import sys; sys.path.append("./src");
+from src import Assets;
+from src import Map;
+from src import Camera;
+py.init();
+
+camera_x = camera_y = 25;
+camera = Camera.Camera(37 + 25,37 + 25,20);
+running = True;
+
+while(running):
+    Assets.screen.fill((0,0,0));
+    Map.Generate_Map("./src/Map1.txt", Assets.tile_width);
+    camera.Render_Camera();
+    for event in py.event.get():
+        if(event.type == py.QUIT):
+            running = False;
+    keys = py.key.get_pressed();
+    if(keys[97]): camera.Rotate(1);
+    elif(keys[100]): camera.Rotate(-1);
+    if(keys[119]): camera.Move(-1);
+    elif(keys[115]): camera.Move(1);
+    py.display.update();
+    Assets.clock.tick(50);
+py.quit();
