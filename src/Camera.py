@@ -32,7 +32,7 @@ class Camera:
         Assets.screen.blit(self.new_image, rect);
         py.display.flip();
         #Render Rays
-        for r in self.rays: py.draw.line(Assets.screen, (0,255,0), (self.x, self.y), (r[0], r[1]));
+        for r in self.rays: py.draw.line(Assets.screen, (255,0,0), (self.x, self.y), (r[0], r[1]));
     def Rotate(self, direction = 1):
         self.angle = (self.angle + self.angle_speed * direction) % 360;
         new_image = py.transform.rotate(self.image_orig, self.angle);
@@ -43,7 +43,7 @@ class Camera:
         self.y = curr_tuple[1] + direction * (int)(self.speed * (math.cos(math.pi * self.angle / 180)));
         new_tuple = (self.x, self.y);
         self.rect.center = new_tuple;
-    def Cast_Rays(self, ray_count = 10):
+    def Cast_Rays(self, ray_count = 20):
         self.rays = [];
         for i in range(-ray_count // 2, ray_count // 2 + 1, 1): 
             self.Cast_Ray(self.angle + i * 4);
@@ -82,13 +82,12 @@ class Camera:
         while(delta[0] and (y_i - Assets.off_y) % Assets.tile_width): y_i -= delta[0];
         y_i -= delta[0] * Assets.tile_width;
         if(tan_angle): x_i -= (y_i - self.y) / tan_angle;
-        else: x_i += delta[0];
+        else: x_i += delta[0] * 1000; # Auto Correction for infinity
         i, j = self.Position_To_Index(x_i, y_i);
-        while(self.Valid_Index(i,j)):
-            if(Assets.grid[i][j]): break;
+        while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
             y_i -= delta[0] * Assets.tile_width;
             if(tan_angle):x_i += delta[0] *(Assets.tile_width) / tan_angle;
-            else: x_i += delta[0];
+            else: x_i += delta[0] * 1000;
             i, j = self.Position_To_Index(x_i , y_i - delta[0] * 5);
         # Compare Horizontal and Veritcal Distances
         horiz_dist = (self.x - x_o)**2 + (self.y - y_o)**2;
