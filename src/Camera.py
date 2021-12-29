@@ -1,6 +1,7 @@
 from src import Assets;
 import pygame as py;
 import math;
+import numpy as np;
 
 # https://stackoverflow.com/questions/36510795/rotating-a-rectangle-not-image-in-pygame/51381391#51381391
 
@@ -34,14 +35,18 @@ class Camera:
         self.new_image = new_image;
     def Move(self, direction = 1):
         curr_tuple = self.rect.center;
-        x_final = curr_tuple[0] + direction * (int)(self.speed * (math.sin(math.pi * self.angle / 180)));
-        y_final = curr_tuple[1] + direction * (int)(self.speed * (math.cos(math.pi * self.angle / 180)));
-        new_tuple = (x_final, y_final);
+        self.x = curr_tuple[0] + direction * (int)(self.speed * (math.sin(math.pi * self.angle / 180)));
+        self.y = curr_tuple[1] + direction * (int)(self.speed * (math.cos(math.pi * self.angle / 180)));
+        new_tuple = (self.x, self.y);
         self.rect.center = new_tuple;
-    def Cast_Rays(self, ray_count = 16):
-        for i in range(-ray_count // 2, (ray_count // 2) + 1, 1):
-            self.Cast_Ray(self.angle + 4 * i);
+    def Cast_Rays(self, ray_count = 20):
+        
+        # for i in range(-ray_count // 2, (ray_count // 2) + 1, 1):
+        #     self.Cast_Ray(self.angle + 3 * i);
+        self.Cast_Ray(self.angle);
+
     def Cast_Ray(self, angle):
+        """
         x, y = self.rect.center[0], self.rect.center[1];
         while True:
             i = (x - Assets.off_x) // Assets.tile_width;
@@ -54,3 +59,22 @@ class Camera:
             else: 
                 y -= (int)(math.cos(angle * math.pi / 180) * Assets.tile_magnitude);
                 x -= (int)(math.sin(angle * math.pi / 180) * Assets.tile_magnitude);
+        """
+        #print("cos: ", math.cos(math.pi * angle / 180), " sin: ", math.sin(math.pi * angle / 180));
+        # print(self.Position_To_Index());
+        
+        # + Optimization + #
+        delta = np.sign([math.cos(angle * math.pi / 180), math.sin((angle * math.pi) / 180)]);
+        y_o = self.y;
+        x_o = self.x;
+        # Check the horizontal distance first 
+        while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
+        y_o += (int)(math.tan(angle * math.pi / 180) * (x_o - self.x));
+        py.draw.circle(Assets.screen, (255,0,0), (x_o, y_o), 3);
+        
+
+
+    def Position_To_Index(self, x, y):
+        j = (x - Assets.off_x) // Assets.tile_width;
+        i = (y - Assets.off_y) // Assets.tile_width;
+        return i, j;

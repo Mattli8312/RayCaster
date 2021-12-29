@@ -24,5 +24,5 @@ while(running):
     if(keys[119]): camera.Move(-1);
     elif(keys[115]): camera.Move(1);
     py.display.update();
-    Assets.clock.tick(50);
+    Assets.clock.tick(40);
 py.quit();
