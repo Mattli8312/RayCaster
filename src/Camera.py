@@ -21,7 +21,7 @@ class Camera:
         self.new_image = self.image_orig.copy();
         #Thanks to link above
         self.ray_count = 14;
-        self.angle = 0;
+        self.angle = 90;
         self.angle_speed = 4;
     def Render_Camera(self):
         old_center = self.rect.center;
@@ -69,7 +69,8 @@ class Camera:
         x_o = self.x;
         # Check the horizontal distance first 
         while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
-        y_o += (int)(math.tan(angle * math.pi / 180) * (x_o - self.x));
+        x_o -= delta[1] * Assets.tile_width;
+        y_o -= (x_o - self.x) * math.tan((angle - 90) * math.pi / 180)
         py.draw.circle(Assets.screen, (255,0,0), (x_o, y_o), 3);
         
 
