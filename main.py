@@ -9,10 +9,11 @@ py.init();
 camera_x = camera_y = 150;
 camera = Camera.Camera(camera_x,camera_y,20);
 running = True;
+Map.Initialize_Map("./src/Map1.txt");
 
 while(running):
     Assets.screen.fill((0,0,0));
-    Map.Generate_Map("./src/Map1.txt", Assets.tile_width);
+    Map.Generate_Map(Assets.tile_width);
     camera.Render_Camera();
     camera.Cast_Rays();
     for event in py.event.get():
@@ -24,5 +25,5 @@ while(running):
     if(keys[119]): camera.Move(-1);
     elif(keys[115]): camera.Move(1);
     py.display.update();
-    Assets.clock.tick(40);
+    Assets.clock.tick(70);
 py.quit();
