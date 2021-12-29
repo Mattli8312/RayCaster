@@ -65,17 +65,35 @@ class Camera:
         
         # + Optimization + #
         delta = np.sign([math.cos(angle * math.pi / 180), math.sin((angle * math.pi) / 180)]);
+        horiz_dist = vert_dist = 0;
         y_o = self.y;
         x_o = self.x;
         # Check the horizontal distance first 
         while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
-        x_o -= delta[1] * Assets.tile_width;
-        y_o -= (x_o - self.x) * math.tan((angle - 90) * math.pi / 180)
-        py.draw.circle(Assets.screen, (255,0,0), (x_o, y_o), 3);
-        
-
+        y_o -= (x_o - self.x) * math.tan((angle - 90) * math.pi / 180);
+        i, j = self.Position_To_Index(x_o, y_o);
+        while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
+            x_o -= delta[1] * Assets.tile_width;
+            y_o += delta[1] * Assets.tile_width * math.tan((angle - 90) * math.pi / 180);
+            i, j = self.Position_To_Index(x_o  - delta[1] * 5 , y_o);
+        py.draw.line(Assets.screen, (0,255,128), (x_o, y_o), (self.x, self.y));
+        #Check the vertical distance second
+        y_i = self.y;
+        x_i = self.x;
+        while(delta[0] and (y_i - Assets.off_y) % Assets.tile_width): y_i -= delta[0];
+        y_i -= delta[0] * Assets.tile_width;
+        if(math.tan((angle - 90) * math.pi / 180)): x_i -= (y_i - self.y) / math.tan((angle - 90) * math.pi / 180);
+        i, j = self.Position_To_Index(x_i, y_i);
+        while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
+            y_i -= delta[0] * Assets.tile_width;
+            if(math.tan((angle - 90) * math.pi / 180)): x_i += delta[0] *(Assets.tile_width) / math.tan((angle - 90) * math.pi / 180);
+            i, j = self.Position_To_Index(x_i , y_i);
+        py.draw.line(Assets.screen, (255,0,0), (self.x, self.y), (x_i, y_i));
 
     def Position_To_Index(self, x, y):
-        j = (x - Assets.off_x) // Assets.tile_width;
-        i = (y - Assets.off_y) // Assets.tile_width;
+        j = (int)((x - Assets.off_x) // Assets.tile_width);
+        i = (int)((y - Assets.off_y) // Assets.tile_width);
         return i, j;
+
+    def Valid_Index(self, i, j):
+        return i > -1 and j > -1 and i < len(Assets.grid) and j < len(Assets.grid[0]);
