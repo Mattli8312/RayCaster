@@ -1,4 +1,4 @@
-# RayCasting Engine [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Mattli8312/RayCaster/blob/main/LICENSE)
+# RayCasting Engine [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Mattli8312/RayCaster/blob/main/LICENSE) [Python](https://img.shields.io/badge/-Python-blue)
 
 ## OverView
 
@@ -43,3 +43,16 @@ This was the meat of the project and I had two implementations. The first naive 
 * The computational cost of this method was too much. Even after tuning certain parameters, The framerate could not handle this amount of computation. As a result it was very slow and not feasible for a standard machine.
 
 The second implementation was much better and counteracted the previous issues. This result was inspired by 3DSage, a youtuber who makes a RayCasting engine from scratch. This method was much faster and after tuning some parameters in the main.py file, I got it running fairly smoothely.
+
+### Rendering the other Rays
+
+This was simple, just use a for loop and cast rays at angles spaced with intervals from the central ray:
+
+### Rendering the 3D Surface
+
+Naive Approach: Simply take the distance calculated for each ray and take the inverse. This creates a parallax effect such that for objects further away, they will seem smaller. Each ray generated per frame is responsible for generating a segment of a wall. You can increase the quality of the frame by increasing the number of rays generated for the camera, however you will need to decrease the spacing between the rays to avoid warping the image. 
+
+Although this may seem fine at first, there is a main issue with this: The image appears warped. To avoid this "fisheye" effect, we needed to multiply the distance by the cosine of the angle between the ray and the central camera ray. You can see the effects of this afterwards:
+
+
+
