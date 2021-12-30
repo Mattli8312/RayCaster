@@ -57,7 +57,7 @@ class Camera:
     def Cast_Rays(self):
         self.rays = [];
         for i in range(self.ray_count // 2, -self.ray_count // 2 - 1, -1): 
-            self.Cast_Ray(self.angle + i * 4);
+            self.Cast_Ray(self.angle + i * 1);
 
     def Cast_Ray(self, angle):
         # Naive Approach
@@ -78,6 +78,7 @@ class Camera:
         # + Optimization + #
         delta = np.sign([math.cos(angle * math.pi / 180), math.sin((angle * math.pi) / 180)]);
         tan_angle = math.tan((angle - 90) * math.pi / 180);
+        counter = 0;
         y_o = self.y;
         x_o = self.x;
         # Check the horizontal distance first 
@@ -86,7 +87,8 @@ class Camera:
         i, j = self.Position_To_Index(x_o - delta[1] * 5, y_o);
         while(self.Valid_Index(i,j) and x_o > 0 and y_o > 0 and not Assets.grid[i][j]):
             x_o -= delta[1] * Assets.tile_width;
-            y_o += delta[1] * Assets.tile_width * tan_angle;
+            if(delta[1]): y_o += delta[1] * Assets.tile_width * tan_angle;
+            else: y_o -= delta[0] * Assets.tile_width;
             i, j = self.Position_To_Index(x_o  - delta[1] * 5 , y_o);
         # #Check the vertical distance second
         y_i = self.y;
