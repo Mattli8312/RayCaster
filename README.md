@@ -42,6 +42,8 @@ This was the meat of the project and I had two implementations. The first naive 
 * The intersection points on the walls were inconsistent, meaning that some rays travelled too far into the barriers, creating ray distortions.
 * The computational cost of this method was too much. Even after tuning certain parameters, The framerate could not handle this amount of computation. As a result it was very slow and not feasible for a standard machine.
 
+![Naive](Images/NaiveRayCast.jpg)
+
 The second implementation was much better and counteracted the previous issues. This result was inspired by 3DSage, a youtuber who makes a RayCasting engine from scratch. This method was much faster and after tuning some parameters in the main.py file, I got it running fairly smoothely.
 
 ### Rendering the other Rays
@@ -54,5 +56,7 @@ Naive Approach: Simply take the distance calculated for each ray and take the in
 
 Although this may seem fine at first, there is a main issue with this: The image appears warped. To avoid this "fisheye" effect, we needed to multiply the distance by the cosine of the angle between the ray and the central camera ray. You can see the effects of this afterwards:
 
+## Contributing
 
-
+As of right now, there are no known bugs in the code, however, if you happen to come across some issues, or want add additional features
+to the application, feel free to make pull requests.

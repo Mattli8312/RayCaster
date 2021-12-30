@@ -61,7 +61,6 @@ class Camera:
 
     def Cast_Ray(self, angle):
         # Naive Approach
-        """
         x, y = self.rect.center[0], self.rect.center[1];
         while True:
             i = (x - Assets.off_x) // Assets.tile_width;
@@ -74,40 +73,39 @@ class Camera:
             else: 
                 y -= (int)(math.cos(angle * math.pi / 180) * Assets.tile_magnitude);
                 x -= (int)(math.sin(angle * math.pi / 180) * Assets.tile_magnitude);
-        """ 
         # + Optimization + #
-        delta = np.sign([math.cos(angle * math.pi / 180), math.sin((angle * math.pi) / 180)]);
-        tan_angle = math.tan((angle - 90) * math.pi / 180);
-        counter = 0;
-        y_o = self.y;
-        x_o = self.x;
-        # Check the horizontal distance first 
-        while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
-        y_o -= (x_o - self.x) * tan_angle;
-        i, j = self.Position_To_Index(x_o - delta[1] * 5, y_o);
-        while(self.Valid_Index(i,j) and x_o > 0 and y_o > 0 and not Assets.grid[i][j]):
-            x_o -= delta[1] * Assets.tile_width;
-            if(delta[1]): y_o += delta[1] * Assets.tile_width * tan_angle;
-            else: y_o -= delta[0] * Assets.tile_width;
-            i, j = self.Position_To_Index(x_o  - delta[1] * 5 , y_o);
-        # #Check the vertical distance second
-        y_i = self.y;
-        x_i = self.x;
-        while(delta[0] and (y_i - Assets.off_y) % Assets.tile_width): y_i -= delta[0];
-        y_i -= delta[0] * Assets.tile_width;
-        if(tan_angle): x_i -= (y_i - self.y) / tan_angle;
-        else: x_i += delta[0] * 1000; # Auto Correction for infinity
-        i, j = self.Position_To_Index(x_i, y_i - delta[0] * 5);
-        while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
-            y_i -= delta[0] * Assets.tile_width;
-            if(tan_angle):x_i += delta[0] *(Assets.tile_width) / tan_angle;
-            else: x_i += delta[0] * 1000;
-            i, j = self.Position_To_Index(x_i , y_i - delta[0] * 5);
-        # Compare Horizontal and Veritcal Distances
-        horiz_dist = (self.x - x_o)**2 + (self.y - y_o)**2;
-        vert_dist = (self.x - x_i)**2 + (self.y - y_i)**2;
-        if(horiz_dist < vert_dist): self.rays.append([x_o,y_o,horiz_dist,'h', angle]);
-        else: self.rays.append([x_i,y_i,vert_dist,'v', angle]);
+        # delta = np.sign([math.cos(angle * math.pi / 180), math.sin((angle * math.pi) / 180)]);
+        # tan_angle = math.tan((angle - 90) * math.pi / 180);
+        # counter = 0;
+        # y_o = self.y;
+        # x_o = self.x;
+        # # Check the horizontal distance first 
+        # while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
+        # y_o -= (x_o - self.x) * tan_angle;
+        # i, j = self.Position_To_Index(x_o - delta[1] * 5, y_o);
+        # while(self.Valid_Index(i,j) and x_o > 0 and y_o > 0 and not Assets.grid[i][j]):
+        #     x_o -= delta[1] * Assets.tile_width;
+        #     if(delta[1]): y_o += delta[1] * Assets.tile_width * tan_angle;
+        #     else: y_o -= delta[0] * Assets.tile_width;
+        #     i, j = self.Position_To_Index(x_o  - delta[1] * 5 , y_o);
+        # # #Check the vertical distance second
+        # y_i = self.y;
+        # x_i = self.x;
+        # while(delta[0] and (y_i - Assets.off_y) % Assets.tile_width): y_i -= delta[0];
+        # y_i -= delta[0] * Assets.tile_width;
+        # if(tan_angle): x_i -= (y_i - self.y) / tan_angle;
+        # else: x_i += delta[0] * 1000; # Auto Correction for infinity
+        # i, j = self.Position_To_Index(x_i, y_i - delta[0] * 5);
+        # while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
+        #     y_i -= delta[0] * Assets.tile_width;
+        #     if(tan_angle):x_i += delta[0] *(Assets.tile_width) / tan_angle;
+        #     else: x_i += delta[0] * 1000;
+        #     i, j = self.Position_To_Index(x_i , y_i - delta[0] * 5);
+        # # Compare Horizontal and Veritcal Distances
+        # horiz_dist = (self.x - x_o)**2 + (self.y - y_o)**2;
+        # vert_dist = (self.x - x_i)**2 + (self.y - y_i)**2;
+        # if(horiz_dist < vert_dist): self.rays.append([x_o,y_o,horiz_dist,'h', angle]);
+        # else: self.rays.append([x_i,y_i,vert_dist,'v', angle]);
 
     def Position_To_Index(self, x, y):
         j = (int)((x - Assets.off_x) // Assets.tile_width);
