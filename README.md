@@ -1,4 +1,4 @@
-# RayCasting Engine [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Mattli8312/RayCaster/blob/main/LICENSE) ![Python](https://img.shields.io/badge/-Python-blue.svg)
+# RayCasting Engine [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Mattli8312/RayCaster/blob/main/LICENSE) ![Python](https://img.shields.io/badge/-Python-blue.svg) ![Pygame](https://img.shields.io/badge/-Python-green.svg)
 
 ## OverView
 
