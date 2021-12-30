@@ -22,10 +22,10 @@ class Camera:
         self.speed = 5;
         self.new_image = self.image_orig.copy();
         #Thanks to link above
-        self.ray_count = 14;
+        self.ray_count = 25; # Should be an odd number
         self.angle = 90;
         self.angle_speed = 4;
-    def Render_Camera(self):
+    def Render_Camera(self): # 2-D Implementation
         old_center = self.rect.center;
         rect = self.new_image.get_rect();
         rect.center = old_center;
@@ -33,6 +33,16 @@ class Camera:
         py.display.flip();
         #Render Rays
         for r in self.rays: py.draw.line(Assets.screen, (255,0,0), (self.x, self.y), (r[0], r[1]));
+    def Render_Camera_View(self): # 3-D Implementation
+        wall_width = Assets.width // self.ray_count;
+        color = (0,255,128);
+        for i in range(len(self.rays)):
+            dist = self.rays[i][2]**0.5;
+            if(dist): wall_height = Assets.height * 100 / (self.rays[i][2])**0.5;
+            else: wall_height = Assets.height * 100;
+            if(self.rays[i][3] == 'v'): color = (0,255,0);
+            else: color = (0,255,50); 
+            py.draw.rect(Assets.screen, color, (i * wall_width, (Assets.height - wall_height) // 2, wall_width, wall_height));
     def Rotate(self, direction = 1):
         self.angle = (self.angle + self.angle_speed * direction) % 360;
         new_image = py.transform.rotate(self.image_orig, self.angle);
@@ -43,12 +53,13 @@ class Camera:
         self.y = curr_tuple[1] + direction * (int)(self.speed * (math.cos(math.pi * self.angle / 180)));
         new_tuple = (self.x, self.y);
         self.rect.center = new_tuple;
-    def Cast_Rays(self, ray_count = 20):
+    def Cast_Rays(self):
         self.rays = [];
-        for i in range(-ray_count // 2, ray_count // 2 + 1, 1): 
+        for i in range(self.ray_count // 2, -self.ray_count // 2 - 1, -1): 
             self.Cast_Ray(self.angle + i * 4);
 
     def Cast_Ray(self, angle):
+        # Naive Approach
         """
         x, y = self.rect.center[0], self.rect.center[1];
         while True:
@@ -92,8 +103,8 @@ class Camera:
         # Compare Horizontal and Veritcal Distances
         horiz_dist = (self.x - x_o)**2 + (self.y - y_o)**2;
         vert_dist = (self.x - x_i)**2 + (self.y - y_i)**2;
-        if(horiz_dist < vert_dist): self.rays.append([x_o,y_o]);
-        else: self.rays.append([x_i,y_i]);
+        if(horiz_dist < vert_dist): self.rays.append([x_o,y_o,horiz_dist,'h']);
+        else: self.rays.append([x_i,y_i,vert_dist,'v']);
 
     def Position_To_Index(self, x, y):
         j = (int)((x - Assets.off_x) // Assets.tile_width);
