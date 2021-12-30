@@ -19,10 +19,10 @@ class Camera:
         self.image_orig.fill((255,0,0));
         self.rect = self.image_orig.get_rect();
         self.rect.center = (self.x, self.y);
-        self.speed = 5;
+        self.speed = 10;
         self.new_image = self.image_orig.copy();
         #Thanks to link above
-        self.ray_count = 25; # Should be an odd number
+        self.ray_count = 19; # Should be an odd number
         self.angle = 90;
         self.angle_speed = 4;
     def Render_Camera(self): # 2-D Implementation
@@ -35,13 +35,14 @@ class Camera:
         for r in self.rays: py.draw.line(Assets.screen, (255,0,0), (self.x, self.y), (r[0], r[1]));
     def Render_Camera_View(self): # 3-D Implementation
         wall_width = Assets.width // self.ray_count;
+        wall_height = 0;
         color = (0,255,128);
         for i in range(len(self.rays)):
-            dist = self.rays[i][2]**0.5;
-            if(dist): wall_height = Assets.height * 100 / (self.rays[i][2])**0.5;
+            dist = self.rays[i][2]**0.5 * abs(math.cos((self.angle - self.rays[i][4]) * math.pi / 180)); #Eliminate Warping of image
+            if(dist): wall_height = Assets.height * 100 / dist;
             else: wall_height = Assets.height * 100;
-            if(self.rays[i][3] == 'v'): color = (0,255,0);
-            else: color = (0,255,50); 
+            if(self.rays[i][3] == 'v'): color = (0,128,0);
+            else: color = (0,255,0); 
             py.draw.rect(Assets.screen, color, (i * wall_width, (Assets.height - wall_height) // 2, wall_width, wall_height));
     def Rotate(self, direction = 1):
         self.angle = (self.angle + self.angle_speed * direction) % 360;
@@ -82,7 +83,7 @@ class Camera:
         # Check the horizontal distance first 
         while(delta[1] and (x_o - Assets.off_x) % Assets.tile_width): x_o -= delta[1];
         y_o -= (x_o - self.x) * tan_angle;
-        i, j = self.Position_To_Index(x_o, y_o);
+        i, j = self.Position_To_Index(x_o - delta[1] * 5, y_o);
         while(self.Valid_Index(i,j) and x_o > 0 and y_o > 0 and not Assets.grid[i][j]):
             x_o -= delta[1] * Assets.tile_width;
             y_o += delta[1] * Assets.tile_width * tan_angle;
@@ -94,7 +95,7 @@ class Camera:
         y_i -= delta[0] * Assets.tile_width;
         if(tan_angle): x_i -= (y_i - self.y) / tan_angle;
         else: x_i += delta[0] * 1000; # Auto Correction for infinity
-        i, j = self.Position_To_Index(x_i, y_i);
+        i, j = self.Position_To_Index(x_i, y_i - delta[0] * 5);
         while(self.Valid_Index(i,j) and not Assets.grid[i][j]):
             y_i -= delta[0] * Assets.tile_width;
             if(tan_angle):x_i += delta[0] *(Assets.tile_width) / tan_angle;
@@ -103,8 +104,8 @@ class Camera:
         # Compare Horizontal and Veritcal Distances
         horiz_dist = (self.x - x_o)**2 + (self.y - y_o)**2;
         vert_dist = (self.x - x_i)**2 + (self.y - y_i)**2;
-        if(horiz_dist < vert_dist): self.rays.append([x_o,y_o,horiz_dist,'h']);
-        else: self.rays.append([x_i,y_i,vert_dist,'v']);
+        if(horiz_dist < vert_dist): self.rays.append([x_o,y_o,horiz_dist,'h', angle]);
+        else: self.rays.append([x_i,y_i,vert_dist,'v', angle]);
 
     def Position_To_Index(self, x, y):
         j = (int)((x - Assets.off_x) // Assets.tile_width);

@@ -6,16 +6,17 @@ from src import Map;
 from src import Camera;
 py.init();
 
-camera_x = camera_y = 150;
+camera_x = 150;
+camera_y = 300;
 camera = Camera.Camera(camera_x,camera_y,20);
 running = True;
 Map.Initialize_Map("./src/Map1.txt");
 
 while(running):
     Assets.screen.fill((0,0,0));
-    #Map.Generate_Map(Assets.tile_width); # 2-D view
+    # Map.Generate_Map(Assets.tile_width); # 2-D view
+    # camera.Render_Camera(); # 2-D view
     camera.Render_Camera_View(); # 3-D view
-    #camera.Render_Camera(); # 2-D view
     camera.Cast_Rays();
     for event in py.event.get():
         if(event.type == py.QUIT):
