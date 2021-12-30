@@ -35,26 +35,29 @@ This part was a little trickier, given that I have only rotated sprites and not 
 
 https://stackoverflow.com/questions/36510795/rotating-a-rectangle-not-image-in-pygame/51381391#51381391
 
-### Rendering the Center Ray
+### Rendering the Center Ray and peripheral rays
 
-This was the meat of the project and I had two implementations. The first naive implementation involved starting from the center of the camera and slowly drawing out intervals of the ray at a specific angle until that ray has intersected a wall. There were two main issues with this approach however:
+This was the meat of the project and I had two implementations. The first naive implementation involved starting from the center of the camera and slowly drawing out intervals of the ray at a specific angle until that ray has intersected a wall. There were three main issues with this approach however:
 
 * The intersection points on the walls were inconsistent, meaning that some rays travelled too far into the barriers, creating ray distortions.
 * The computational cost of this method was too much. Even after tuning certain parameters, The framerate could not handle this amount of computation. As a result it was very slow and not feasible for a standard machine.
+* Because Some rays would "overshoot" the bound, the rounding errors would cause some rays to "Merge" with other rays decreasing the quality of the image significantly.
 
 ![Naive](Images/NaiveRayCast.jpg)
 
 The second implementation was much better and counteracted the previous issues. This result was inspired by 3DSage, a youtuber who makes a RayCasting engine from scratch. This method was much faster and after tuning some parameters in the main.py file, I got it running fairly smoothely.
 
-### Rendering the other Rays
-
-This was simple, just use a for loop and cast rays at angles spaced with intervals from the central ray:
+![Optimized](Images/OptimizedRayCast.jpg)
 
 ### Rendering the 3D Surface
 
 Naive Approach: Simply take the distance calculated for each ray and take the inverse. This creates a parallax effect such that for objects further away, they will seem smaller. Each ray generated per frame is responsible for generating a segment of a wall. You can increase the quality of the frame by increasing the number of rays generated for the camera, however you will need to decrease the spacing between the rays to avoid warping the image. 
 
+![Naive3D](Images/Naive3D.jpg)
+
 Although this may seem fine at first, there is a main issue with this: The image appears warped. To avoid this "fisheye" effect, we needed to multiply the distance by the cosine of the angle between the ray and the central camera ray. You can see the effects of this afterwards:
+
+![Optimized3D](Images/Optimized3D.jpg)
 
 ## Contributing
 
