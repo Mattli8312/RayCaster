@@ -1,3 +1,2 @@
-# RayCaster 
+# RayCasting Engine [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]
 
-*Creating a Raycaster using python via pygame module. Contains both 2D and 3D implementation*

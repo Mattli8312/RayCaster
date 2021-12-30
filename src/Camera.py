@@ -22,7 +22,7 @@ class Camera:
         self.speed = 10;
         self.new_image = self.image_orig.copy();
         #Thanks to link above
-        self.ray_count = 19; # Should be an odd number
+        self.ray_count = 31; # Should be an odd number
         self.angle = 90;
         self.angle_speed = 4;
     def Render_Camera(self): # 2-D Implementation
@@ -57,7 +57,7 @@ class Camera:
     def Cast_Rays(self):
         self.rays = [];
         for i in range(self.ray_count // 2, -self.ray_count // 2 - 1, -1): 
-            self.Cast_Ray(self.angle + i * 1);
+            self.Cast_Ray(self.angle + i * 2);
 
     def Cast_Ray(self, angle):
         # Naive Approach
